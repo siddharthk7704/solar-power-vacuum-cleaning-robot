@@ -1,0 +1,384 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+
+WorldInfo {
+  basicTimeStep 32
+}
+
+Viewpoint {
+  orientation 0.132 0.0373 -0.991 2.6
+  position 3.95 2.35 1.59
+}
+
+TexturedBackground {}
+TexturedBackgroundLight {}
+
+Floor {
+  translation 0 0 0
+  size 2 2
+  appearance PBRAppearance {
+    baseColor 0.8 0.8 0.8  
+    roughness 1
+  }
+}
+
+DEF Obstacle1 Solid {
+  translation 0.4 0.7 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.2 0.2
+      }
+      geometry Box {
+        size 0.2 0.2 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.2 0.2 0.1
+  }
+  physics Physics {
+    mass 0
+  }
+}
+
+DEF Obstacle2 Solid {
+  translation -0.7 -0.4 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.3 0.3
+      }
+      geometry Box {
+        size 0.15 0.1 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.1 0.1 0.1
+  }
+  physics Physics {
+    mass 0
+  }
+}
+
+DEF Obstacle3 Solid {
+  translation 0.3 -0.8 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.4 0.2 0.1
+      }
+      geometry Cylinder {
+        height 0.1
+        radius 0.1
+      }
+    }
+  ]
+  boundingObject Cylinder {
+    height 0.1
+    radius 0.1
+  }
+  physics Physics {
+    mass 0
+  }
+}
+
+DEF SpotLight SpotLight {
+  location 0.8 0.8 1
+  direction 0 0 -1
+  color 1 1 0
+  intensity 30
+  beamWidth 0.6
+  cutOffAngle 0.2
+  castShadows TRUE
+}
+
+
+DEF VisibleSun Transform {
+  translation -5 5 5  # Position it far in the sky
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 1 0.7   # Sun-like color (warm yellow)
+        emissiveColor 1 1 0.7  # Glowing effect
+      }
+      geometry Sphere {
+        radius 0.2
+      }
+    }
+  ]
+}
+
+
+# SolarVacuumBot Robot Definition
+DEF SolarVacuumBot Robot {
+  name "SolarVacuumBot"
+  translation 0 0 0.05
+  rotation 0 1 0 0
+  controller "vacuum_controller"
+  children [
+    # Chassis
+    Solid {
+      name "chassis"
+      translation 0 0 0.05
+      children [
+        Shape {
+          geometry Box {
+            size 0.3 0.3 0.1
+          }
+          appearance PBRAppearance {
+            baseColor 0.5 0.5 0.5
+          }
+        }
+      ]
+      boundingObject Box {
+        size 0.3 0.3 0.1
+      }
+      physics Physics {
+        density 500
+      }
+    }
+
+    # Vacuum Unit
+    Solid {
+      name "vacuum_unit"
+      translation 0.1 0 0.1
+      children [
+        Shape {
+          geometry Box {
+            size 0.1 0.1 0.05
+          }
+          appearance PBRAppearance {
+            baseColor 0.2 0.2 0.2
+          }
+        }
+      ]
+      boundingObject Box {
+        size 0.1 0.1 0.05
+      }
+      physics Physics {
+        density 200
+      }
+    }
+
+    # Solar Panel
+    Solid {
+      name "solar_panel"
+      translation 0 0 0.15
+      children [
+        Shape {
+          geometry Box {
+            size 0.2 0.25 0.01
+          }
+          appearance PBRAppearance {
+            baseColor 0.9 0.9 0.9
+            roughness 0.2
+          }
+        }
+      ]
+      boundingObject Box {
+        size 0.2 0.25 0.01
+      }
+      physics Physics {
+        density 100
+      }
+    }
+
+    # Light Sensor to detect sunlight (Positioned above the solar panel)
+    LightSensor {
+      name "solarPanelLightSensor"
+      translation 0 0 0.17
+      rotation 1 0 0 1  # Sensor facing upwards to detect sunlight
+    }
+  ]
+  boundingObject Box {
+    size 0.3 0.3 0.1
+  }
+  physics Physics {
+    density 1000
+  }
+}
+
+# Supervisor Robot (Handles simulation control)
+DEF SupervisorBot Robot {
+  name "SupervisorBot"
+  supervisor TRUE
+  controller "supervisor_controller"
+}
+
+
+# Dust particles
+DEF Dust1 Solid {
+  translation 0.2 0.1 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.2 0.2
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust2 Solid {
+  translation -0.3 0.5 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.3 0.1
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust3 Solid {
+  translation 0.4 -0.3 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.6 0.4 0.1
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust4 Solid {
+  translation -0.6 -0.2 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.8 0.1 0.2
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust5 Solid {
+  translation 0.5 0.3 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.1 0.4 0.5
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust6 Solid {
+  translation 0.8 -0.6 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.9 0.4 0.6
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust7 Solid {
+  translation 0.6 0.1 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.5 0.3 0.7
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust8 Solid {
+  translation -0.5 0.4 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.5 0.8
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust9 Solid {
+  translation 0.3 -0.5 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.7 0.5 0.2
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
+DEF Dust10 Solid {
+  translation -0.2 0.3 0.01
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.4 0.1 0.7
+      }
+      geometry Sphere {
+        radius 0.01
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 0.01
+  }
+}
+
